@@ -23,8 +23,6 @@ import logo from "../images/pngegg.png";
 
 function HomePage() {
   let [pokemon, setPokemon] = useState([]);
-  let [selectedBadges, setSelectedBadges] = useState([]);
-  let [showDiv, setShowDiv] = useState(false);
   let [activeButton, setActiveButton] = useState("type-button");
   let [typeArr, setTypeArr] = useState([]);
   let [weaknessArr, setWeaknessArr] = useState([]);
@@ -61,10 +59,6 @@ function HomePage() {
   useEffect(() => {
     console.log("RESULTS", filteredResults);
   }, [typeArr, weaknessArr]);
-
-  // useEffect(() => {
-
-  // })
 
   //FILTERING POKEMON BY TYPES OR WEAKNESSES
   const filterPokemon = (type, weakness) => {
@@ -157,8 +151,6 @@ function HomePage() {
         );
       }
     }
-
-    setShowDiv(true);
   };
 
   return (
