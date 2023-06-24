@@ -55,6 +55,8 @@
 }
 
 /* CRITERIA FILTER */
+
+/* FOR BUTTONS */
 #criteria-filters {
   display: inline;
   justify-content: center;
@@ -131,11 +133,16 @@
   border-radius: 12px 0 0 12px;
 }
 
-.white {
+.white::after {
   content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
   background-color: rgb(255, 255, 255);
   z-index: -1;
-  border-radius: 12px;
+  border-radius: 0 12px 12px 0;
+  width: 50%;
+  height: 100%;
 }
 
 /* LOGO IMAGE */
@@ -157,11 +164,25 @@
   align-items: center;
 }
 
+/* FOR NAME INPUT & SUBMIT BUTTON */
+#name-search {
+  display: inline;
+}
+
+#go-button {
+  height: 28px;
+  width: 22%;
+  text-align: center;
+  border-radius: 0 12px 12px 0;
+  border: 0;
+  background-color: #bdc6db;
+}
+
 #name-input {
   height: 28px;
-  width: 100%;
+  width: 78%;
   text-align: center;
-  border-radius: 12px;
+  border-radius: 12px 0 0 12px;
   border: 0px;
   margin-bottom: 10px;
 }
@@ -207,7 +228,9 @@
 }
 
 .pokemon-images {
-  padding: 7px;
+  padding-top: 7px;
+  padding-right: 7px;
+  padding-left: 7px;
   width: 75px;
   height: 90px;
 }
@@ -215,6 +238,13 @@
 .under-img {
   padding: 3px;
   font-size: 18px;
+}
+
+#link {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  font-size: 14px;
 }
 
 /* @media only screen and (max-width: 750px) {

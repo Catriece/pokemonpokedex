@@ -30,8 +30,8 @@ function HomePage() {
   let [weaknessArr, setWeaknessArr] = useState([]);
   let [showTypeBadges, setShowTypeBadges] = useState(true);
   let [showWeaknessBadges, setShowWeaknessBadges] = useState(false);
-  let [typeBackground, setTypeBackground] = useState("");
-  let [weaknessBackground, setWeaknessBackground] = useState("");
+  let [showTypeBadgeClick, setShowTypeBadgeClick] = useState([]);
+  let [showWeaknessBadgeClick, setShowWeaknessBadgeClick] = useState([]);
 
   function getPokemon() {
     fetch(
@@ -69,13 +69,13 @@ function HomePage() {
   //FILTERING POKEMON BY TYPES OR WEAKNESSES
   const filterPokemon = (type, weakness) => {
     const filteredPokemon = pokemon.filter((pokemon) => {
-      const filteredType =
+      const byType =
         type.length === 0 || type.every((type) => pokemon.type.includes(type));
-      const filteredWeakness =
+      const byWeakness =
         weakness.length === 0 ||
         weakness.every((weakness) => pokemon.weaknesses.includes(weakness));
 
-      return filteredType && filteredWeakness;
+      return byType && byWeakness;
     });
 
     return filteredPokemon;
@@ -86,6 +86,16 @@ function HomePage() {
   // HANDLING TYPE AND WEAKNESS BUTTONS
   // Turns buttons red if clicked
   // Sets a button as active that helps determine if type or weakness badges are shown on the screen
+
+  const handleNameInput = (e) => {
+    const name = e.target.value;
+
+    const filterName = pokemon.filter((pokemon) => {
+      return name.toLowerCase() === pokemon.name.toLowerCase();
+    });
+
+    console.log("HERES THE FILTER NAME", filterName);
+  };
 
   const handleButtonClick = (e) => {
     const buttonId = e.target.id;
@@ -120,15 +130,13 @@ function HomePage() {
     if (activeButton === "type-button") {
       if (!typeArr.includes(badgeName)) {
         setTypeArr((prevTypeArr) => [...prevTypeArr, badgeName]);
-        setTypeBackground(
-          document.getElementById("left-red").classList.add("red")
-        );
+        setShowTypeBadgeClick((prevTypeArr) => [...prevTypeArr, badgeName]);
       } else {
         setTypeArr((prevTypeArr) =>
           prevTypeArr.filter((type) => type !== badgeName)
         );
-        setTypeBackground(
-          document.getElementById("left-red").classList.remove("red")
+        setShowTypeBadgeClick((prevTypeArr) =>
+          prevTypeArr.filter((type) => type !== badgeName)
         );
       }
     }
@@ -136,12 +144,17 @@ function HomePage() {
     if (activeButton === "weakness-button") {
       if (!weaknessArr.includes(badgeName)) {
         setWeaknessArr((prevWeaknessArr) => [...prevWeaknessArr, badgeName]);
-        document.getElementById("right-white").classList.add("white");
+        setShowWeaknessBadgeClick((prevWeaknessArr) => [
+          ...prevWeaknessArr,
+          badgeName,
+        ]);
       } else {
         setWeaknessArr((prevWeaknessArr) =>
           prevWeaknessArr.filter((weakness) => weakness !== badgeName)
         );
-        document.getElementById("right-white").classList.remove("white");
+        setShowWeaknessBadgeClick((prevWeaknessArr) =>
+          prevWeaknessArr.filter((weakness) => weakness !== badgeName)
+        );
       }
     }
 
@@ -156,7 +169,17 @@ function HomePage() {
             <img src={logo} alt="pokemon logo" id="logo-image" />
           </div>
           <div id="search">
-            <input type="text" id="name-input" placeholder="Name" />
+            <form id="name-search" onClick={handleNameInput}>
+              <input
+                type="text"
+                id="name-input"
+                className="search-name"
+                placeholder="Name"
+              />
+              <button type="submit" id="go-button" className="search-name">
+                GO!
+              </button>
+            </form>
             <br />
             <button
               id="type-button"
@@ -178,19 +201,12 @@ function HomePage() {
             </button>
           </div>
           <br />
-          {showDiv && (
-            <div id="criteria-fliters">
-              {/* <p id="label" className="filtered">
-                Filters:
-              </p> */}
-              <p className="filtered"> {selectedBadges.join(" ")}</p>
-            </div>
-          )}
+
           {/* SHOWING THE TYPE BADGES WHEN THE TYPE BUTTON IS ACTIVE */}
           {showTypeBadges && (
             <div id="badge-images-div">
               <div className="badge-images">
-                <div className="badge-images">
+                <div className={"badge-images"}>
                   <img
                     src={bugbadge}
                     alt="Bug"
@@ -198,144 +214,392 @@ function HomePage() {
                     onClick={handleBadgeClick}
                   />
                 </div>
-                <div id="left-red" className="click-div"></div>
-                <div id="right-white" className="click-div"></div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Bug") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Bug") ? "white" : ""
+                  }`}
+                ></div>
               </div>
               <div className="badge-images">
-                <img
-                  src={darkbadge}
-                  alt="Dark"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+                <div className={"badge-images"}>
+                  <img
+                    src={darkbadge}
+                    alt="Dark"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Dark") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Dark") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={dragonbadge}
-                  alt="Dragon"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={dragonbadge}
+                    alt="Dragon"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Dragon") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Dragon") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={electricbadge}
-                  alt="Electric"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={electricbadge}
+                    alt="Electric"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Electric") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Electric") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={fairybadge}
-                  alt="Fairy"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={fairybadge}
+                    alt="Fairy"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Fairy") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Fairy") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={fightingbadge}
-                  alt="Fighting"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={fightingbadge}
+                    alt="Fighting"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Fighting") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Fighting") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={firebadge}
-                  alt="Fire"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={firebadge}
+                    alt="Fire"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Fire") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Fire") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={flyingbadge}
-                  alt="Flying"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={flyingbadge}
+                    alt="Flying"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Flying") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Flying") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={ghostbadge}
-                  alt="Ghost"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={ghostbadge}
+                    alt="Ghost"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Ghost") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Ghost") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={grassbadge}
-                  alt="Grass"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={grassbadge}
+                    alt="Grass"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Grass") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Grass") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={groundbadge}
-                  alt="Ground"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={groundbadge}
+                    alt="Ground"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Ground") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Ground") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={icebadge}
-                  alt="Ice"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={icebadge}
+                    alt="Ice"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Ice") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Ice") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={normalbadge}
-                  alt="Normal"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={normalbadge}
+                    alt="Normal"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Normal") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Normal") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={poisonbadge}
-                  alt="Poison"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={poisonbadge}
+                    alt="Poison"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Poison") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Poison") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={psychicbadge}
-                  alt="Psychic"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={psychicbadge}
+                    alt="Psychic"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Psychic") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Psychic") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={rockbadge}
-                  alt="Rock"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={rockbadge}
+                    alt="Rock"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Rock") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Rock") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={steelbadge}
-                  alt="Steel"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={steelbadge}
+                    alt="Steel"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Steel") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Steel") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={waterbadge}
-                  alt="Water"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={waterbadge}
+                    alt="Water"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Water") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Water") ? "white" : ""
+                  }`}
+                ></div>
               </div>
             </div>
           )}
@@ -343,7 +607,7 @@ function HomePage() {
           {showWeaknessBadges && (
             <div id="badge-images-div">
               <div className="badge-images">
-                <div className="badge-images">
+                <div className={"badge-images"}>
                   <img
                     src={bugbadge}
                     alt="Bug"
@@ -351,144 +615,392 @@ function HomePage() {
                     onClick={handleBadgeClick}
                   />
                 </div>
-                <div id="left-red" className="click-div"></div>
-                <div id="right-white" className="click-div"></div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Bug") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Bug") ? "white" : ""
+                  }`}
+                ></div>
               </div>
               <div className="badge-images">
-                <img
-                  src={darkbadge}
-                  alt="Dark"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+                <div className={"badge-images"}>
+                  <img
+                    src={darkbadge}
+                    alt="Dark"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Dark") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Dark") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={dragonbadge}
-                  alt="Dragon"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={dragonbadge}
+                    alt="Dragon"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Dragon") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Dragon") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={electricbadge}
-                  alt="Electric"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={electricbadge}
+                    alt="Electric"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Electric") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Electric") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={fairybadge}
-                  alt="Fairy"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={fairybadge}
+                    alt="Fairy"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Fairy") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Fairy") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={fightingbadge}
-                  alt="Fighting"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={fightingbadge}
+                    alt="Fighting"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Fighting") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Fighting") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={firebadge}
-                  alt="Fire"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={firebadge}
+                    alt="Fire"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Fire") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Fire") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={flyingbadge}
-                  alt="Flying"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={flyingbadge}
+                    alt="Flying"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Flying") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Flying") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={ghostbadge}
-                  alt="Ghost"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={ghostbadge}
+                    alt="Ghost"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Ghost") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Ghost") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={grassbadge}
-                  alt="Grass"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={grassbadge}
+                    alt="Grass"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Grass") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Grass") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={groundbadge}
-                  alt="Ground"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={groundbadge}
+                    alt="Ground"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Ground") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Ground") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={icebadge}
-                  alt="Ice"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={icebadge}
+                    alt="Ice"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Ice") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Ice") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={normalbadge}
-                  alt="Normal"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={normalbadge}
+                    alt="Normal"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Normal") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Normal") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={poisonbadge}
-                  alt="Poison"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={poisonbadge}
+                    alt="Poison"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Poison") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Poison") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={psychicbadge}
-                  alt="Psychic"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={psychicbadge}
+                    alt="Psychic"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Psychic") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Psychic") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={rockbadge}
-                  alt="Rock"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={rockbadge}
+                    alt="Rock"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Rock") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Rock") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={steelbadge}
-                  alt="Steel"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={steelbadge}
+                    alt="Steel"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Steel") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Steel") ? "white" : ""
+                  }`}
+                ></div>
               </div>
-              <div className="badge-images">
-                <img
-                  src={waterbadge}
-                  alt="Water"
-                  className="badge"
-                  onClick={handleBadgeClick}
-                />
+              <div className={"badge-images"}>
+                <div className="badge-images">
+                  <img
+                    src={waterbadge}
+                    alt="Water"
+                    className="badge"
+                    onClick={handleBadgeClick}
+                  />
+                </div>
+                <div
+                  id="left-red"
+                  className={`click-div ${
+                    showTypeBadgeClick.includes("Water") ? "red" : ""
+                  }`}
+                ></div>
+                <div
+                  id="right-white"
+                  className={`click-div ${
+                    showWeaknessBadgeClick.includes("Water") ? "white" : ""
+                  }`}
+                ></div>
               </div>
             </div>
           )}
@@ -499,15 +1011,24 @@ function HomePage() {
               return (
                 <div id="indiv-pokemon-div">
                   <br />
-                  {/* <Link to={`pokemon/${info.id}`} key={info.id + info.name}> */}
-                  <img
-                    src={info.img}
-                    alt={info.name}
-                    id={info.id}
-                    className="pokemon-images"
-                    key={info.name}
-                  />
-                  {/* </Link> */}
+                  <div>
+                    <Link
+                      to={`pokemon/${info.id}`}
+                      id="link"
+                      key={info.id + info.name}
+                    >
+                      <img
+                        src={info.img}
+                        alt={info.name}
+                        id={info.id}
+                        className="pokemon-images"
+                        key={info.name}
+                      />
+                      <div>
+                        <label id="pokemon-name">{info.name}</label>
+                      </div>
+                    </Link>
+                  </div>
                   <br />
                 </div>
               );
