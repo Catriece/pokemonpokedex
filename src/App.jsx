@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import HomePage from "./pages/home.page";
 import SinglePoketypePage from "./pages/single.pokemon.page";
+import NameSearch from "./functions/name.search";
 import logo from "./logo.svg";
 import "./css/home.page.css";
 import "./css/single.page.css";

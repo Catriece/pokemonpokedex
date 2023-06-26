@@ -44,6 +44,7 @@
 #right-bottom-div {
   height: 43%;
   width: 95%;
+  background-color: #6076a7;
 }
 
 /* CONTENT INSIDE TOP/LEFT DIV */
@@ -96,4 +97,23 @@
   font-size: 50px;
   font-weight: 300;
   margin: 0;
+}
+
+.poke-types-weaks {
+  text-align: center;
+  font-size: 18px;
+}
+
+#poke-info-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20px;
+}
+#pokedex-button {
+  border-radius: 12px;
+  border: 0;
+  height: 22px;
+  width: 150px;
 }

@@ -3,6 +3,25 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import Bug from "../images/bugtype.png";
+import Dark from "../images/darktype.png";
+import Dragon from "../images/dragontype.png";
+import Electric from "../images/electrictype.png";
+import Fairy from "../images/fairytype.png";
+import Fighting from "../images/fightingtype.png";
+import Fire from "../images/firetype.png";
+import Flying from "../images/flyingtype.png";
+import Ghost from "../images/ghosttype.png";
+import Grass from "../images/grasstype.png";
+import Ground from "../images/groundtype.png";
+import Ice from "../images/icetype.png";
+import Normal from "../images/normaltype.png";
+import Poison from "../images/poisontype.png";
+import Psychic from "../images/psychictype.png";
+import Rock from "../images/rocktype.png";
+import Steel from "../images/steeltype.png";
+import Water from "../images/watertype.png";
+
 function SinglePoketypePage({ pokemon }) {
   let [indivPokemon, setIndivPokemon] = useState(null);
 
@@ -20,70 +39,6 @@ function SinglePoketypePage({ pokemon }) {
   useEffect(() => {
     setIndivPokemon(pokeId);
   }, [pokeId]);
-
-  const badges = [
-    {
-      imageUrl: "/images/bugtype.png",
-      id: "Bug",
-    },
-    {
-      imageUrl: "/images/dragontype.png",
-      id: "Dragon",
-    },
-    {
-      imageUrl: "/images/electrictype.png",
-      id: "Electric",
-    },
-    {
-      imageUrl: "/images/fightingtype.png",
-      id: "Fighting",
-    },
-    {
-      imageUrl: "/images/firetype.png",
-      id: "Fire",
-    },
-    {
-      imageUrl: "/images/flyingtype.png",
-      id: "Flying",
-    },
-    {
-      imageUrl: "/images/ghosttype.png",
-      id: "Ghost",
-    },
-    {
-      imageUrl: "/images/grasstype.png",
-      id: "Grass",
-    },
-    {
-      imageUrl: "/images/groundtype.png",
-      id: "Ground",
-    },
-    {
-      imageUrl: "/images/icetype.png",
-      id: "Ice",
-    },
-    {
-      imageUrl: "/images/normaltype.png",
-      id: "Normal",
-    },
-    {
-      imageUrl: "/images/poisontype.png",
-      id: "Poison",
-    },
-    {
-      imageUrl: "/images/psychictype.png",
-      id: "Psychic",
-    },
-    {
-      imageUrl: "/images/rocktype.png",
-      id: "Rock",
-    },
-
-    {
-      imageUrl: "/images/watertype.png",
-      id: "Water",
-    },
-  ];
 
   //WORK ON FILTERING THROUGH POKEMON EVOLUTIONS!
 
@@ -108,14 +63,6 @@ function SinglePoketypePage({ pokemon }) {
       {indivPokemon && (
         <div id="home-div">
           <div id="left-top-div" className="info-divs">
-            <div id="buttons-div">
-              <button id="prev-evo" className="evo-button">
-                ---
-              </button>
-              <button id="next-evo" className="evo-button">
-                +++
-              </button>
-            </div>
             <div id="pokemon-img-div">
               <img
                 src={indivPokemon.img}
@@ -132,40 +79,15 @@ function SinglePoketypePage({ pokemon }) {
             <div id="poke-info-div">
               <div id="poke-types-info" className="poke-types-weaks">
                 <h3>Type</h3>
-                {badges.map((poke) => {
-                  if (poke.id === indivPokemon.type.toString()) {
-                    return (
-                      <img
-                        src={poke.imageUrl}
-                        alt={poke.id}
-                        className="poke-badge"
-                      />
-                    );
-                  }
-                })}
+                {indivPokemon.type.join(" & ")}
               </div>
               <div id="poke-weak-info" className="poke-types-weaks">
                 <h3>Weaknesses</h3>
-                {indivPokemon.weaknesses.toString()}
+                {indivPokemon.weaknesses.join(" & ")}
                 <br />
-                {badges.map((poke) => {
-                  for (let i = 0; i < pokemonWeaknessArr.length; i++) {
-                    const subArr = pokemonWeaknessArr[i];
-                    for (let x = 0; x < subArr.length; x++) {
-                      if (poke.id === indivPokemon.weaknesses) {
-                        return (
-                          <img
-                            src={poke.imageUrl}
-                            alt={poke.id}
-                            className="poke-badge"
-                          />
-                        );
-                      }
-                    }
-                  }
-                })}
-                ;
               </div>
+              <br />
+              <br />
               <div>
                 <button id="pokedex-button" onClick={toPokedex}>
                   Back To Pokedex

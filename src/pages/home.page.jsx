@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import NameSearch from "../functions/name.search";
 import bugbadge from "../images/bugtype.png";
 import darkbadge from "../images/darktype.png";
 import dragonbadge from "../images/dragontype.png";
@@ -30,6 +31,7 @@ function HomePage() {
   let [showWeaknessBadges, setShowWeaknessBadges] = useState(false);
   let [showTypeBadgeClick, setShowTypeBadgeClick] = useState([]);
   let [showWeaknessBadgeClick, setShowWeaknessBadgeClick] = useState([]);
+  let [searchName, setSearchName] = useState("");
 
   function getPokemon() {
     fetch(
@@ -39,6 +41,8 @@ function HomePage() {
       .then((pokemon) => setPokemon(pokemon.pokemon))
       .catch((err) => console.err(err));
   }
+
+  //USE EFFECTS
 
   useEffect(() => {
     getPokemon();
@@ -60,6 +64,10 @@ function HomePage() {
     console.log("RESULTS", filteredResults);
   }, [typeArr, weaknessArr]);
 
+  // useEffect(() => {
+  //   console.log("HERES THE FILTER NAME", filterName);
+  // }, []);
+
   //FILTERING POKEMON BY TYPES OR WEAKNESSES
   const filterPokemon = (type, weakness) => {
     const filteredPokemon = pokemon.filter((pokemon) => {
@@ -80,16 +88,6 @@ function HomePage() {
   // HANDLING TYPE AND WEAKNESS BUTTONS
   // Turns buttons red if clicked
   // Sets a button as active that helps determine if type or weakness badges are shown on the screen
-
-  const handleNameInput = (e) => {
-    const name = e.target.value;
-
-    const filterName = pokemon.filter((pokemon) => {
-      return name.toLowerCase() === pokemon.name.toLowerCase();
-    });
-
-    console.log("HERES THE FILTER NAME", filterName);
-  };
 
   const handleButtonClick = (e) => {
     const buttonId = e.target.id;
@@ -161,17 +159,7 @@ function HomePage() {
             <img src={logo} alt="pokemon logo" id="logo-image" />
           </div>
           <div id="search">
-            <form id="name-search" onClick={handleNameInput}>
-              <input
-                type="text"
-                id="name-input"
-                className="search-name"
-                placeholder="Name"
-              />
-              <button type="submit" id="go-button" className="search-name">
-                GO!
-              </button>
-            </form>
+            <NameSearch />
             <br />
             <button
               id="type-button"
@@ -605,6 +593,7 @@ function HomePage() {
                     alt="Bug"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Bug"
                   />
                 </div>
                 <div
@@ -627,6 +616,7 @@ function HomePage() {
                     alt="Dark"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Dark"
                   />
                 </div>
                 <div
@@ -649,6 +639,7 @@ function HomePage() {
                     alt="Dragon"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Dragon"
                   />
                 </div>
                 <div
@@ -671,6 +662,7 @@ function HomePage() {
                     alt="Electric"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Electric"
                   />
                 </div>
                 <div
@@ -693,6 +685,7 @@ function HomePage() {
                     alt="Fairy"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Fairy"
                   />
                 </div>
                 <div
@@ -715,6 +708,7 @@ function HomePage() {
                     alt="Fighting"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Fighting"
                   />
                 </div>
                 <div
@@ -737,6 +731,7 @@ function HomePage() {
                     alt="Fire"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Fire"
                   />
                 </div>
                 <div
@@ -759,6 +754,7 @@ function HomePage() {
                     alt="Flying"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Flying"
                   />
                 </div>
                 <div
@@ -781,6 +777,7 @@ function HomePage() {
                     alt="Ghost"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Ghost"
                   />
                 </div>
                 <div
@@ -803,6 +800,7 @@ function HomePage() {
                     alt="Grass"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Grass"
                   />
                 </div>
                 <div
@@ -825,6 +823,7 @@ function HomePage() {
                     alt="Ground"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Ground"
                   />
                 </div>
                 <div
@@ -847,6 +846,7 @@ function HomePage() {
                     alt="Ice"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Ice"
                   />
                 </div>
                 <div
@@ -869,6 +869,7 @@ function HomePage() {
                     alt="Normal"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Normal"
                   />
                 </div>
                 <div
@@ -891,6 +892,7 @@ function HomePage() {
                     alt="Poison"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Poison"
                   />
                 </div>
                 <div
@@ -913,6 +915,7 @@ function HomePage() {
                     alt="Psychic"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Psychic"
                   />
                 </div>
                 <div
@@ -935,6 +938,7 @@ function HomePage() {
                     alt="Rock"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Rock"
                   />
                 </div>
                 <div
@@ -957,6 +961,7 @@ function HomePage() {
                     alt="Steel"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Steel"
                   />
                 </div>
                 <div
@@ -979,6 +984,7 @@ function HomePage() {
                     alt="Water"
                     className="badge"
                     onClick={handleBadgeClick}
+                    key="Water"
                   />
                 </div>
                 <div
